@@ -10,8 +10,8 @@ def get_data():
                 break
             temp = list(map(int, (line[:len(line)] + line[len(line) + 1:]).split()))
             e_data.append(temp)
-            print(line, end='')
-        print()
+            # print(line, end='')
+        # print()
     return e_data
 
 
@@ -36,23 +36,36 @@ def belman_ford_algorithm(adjancency_matrix, start_point):
             for v in range(len(adjancency_matrix)):
                 if a[i][v] > a[i - 1][u] + adjancency_matrix[u][v]:
                     a[i][v] = a[i - 1][u] + adjancency_matrix[u][v]
-                    matrix_of_history[v]=u
+                    matrix_of_history[v] = u
         if a[i] == a[i - 1]:
-            return matrix_of_history
+            return matrix_of_history, a[i]
     for u in range(len(adjancency_matrix)):
         for v in range(len(adjancency_matrix)):
             if a[-1][v] > a[-1][u] + adjancency_matrix[u][v]:
                 print("Граф містить негативні цикли!")
                 exit(0)
-    return matrix_of_history
+    return matrix_of_history, a[-1]
 
 
 def show_belman_path(belman_data, finish_point):
     if belman_data[finish_point] != -1 and belman_data[finish_point] != float('inf'):
         show_belman_path(belman_data, belman_data[finish_point])
-    print(finish_point+1, end="->")
+    print(finish_point + 1, end="->")
 
 
-startPoint = int(input("Введіть початкову вершину: "))
-finishPoint = int(input("Введіть кінцеву точку: "))
-show_belman_path(belman_ford_algorithm(create_adjacency_matrix(get_data()), startPoint - 1), finishPoint - 1)
+def show_belman_path_multiple(a):
+    for finish_point in range(len(a)):
+        print("До %d відстань %d" % (finish_point + 1, a[finish_point]))
+
+
+choice = int(input("Взначити найкоротший маршрут між двома точками(1) чи між усіма(2): "))
+if choice == 1:
+    startPoint = int(input("Введіть початкову вершину: "))
+    finishPoint = int(input("Введіть кінцеву точку: "))
+    path, a = belman_ford_algorithm(create_adjacency_matrix(get_data()), startPoint - 1)
+    show_belman_path(path, finishPoint - 1)
+    print("Відстань: %s" % a[finishPoint - 1])
+elif choice == 2:
+    startPoint = int(input("Введіть початкову вершину: "))
+    points, a = belman_ford_algorithm(create_adjacency_matrix(get_data()), startPoint - 1)
+    show_belman_path_multiple(a)
