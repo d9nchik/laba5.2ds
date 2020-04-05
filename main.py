@@ -120,24 +120,24 @@ def dijkstra_algorithm_multiple(adjacency_matrix, height):
     return visited
 
 
-def show_path_dijkstra_multiple(dijkstra_data, size):
-    for x in range(size):
-        path = [Heights(None, None, x)]
-        show_path_dijkstra_main_part(dijkstra_data, path)
+def show_path_dijkstra_multiple(dijkstra_data):
+    for x in dijkstra_data:
+        path = [x]
+        show_path_dijkstra_main_part(dijkstra_data, path, x.weight)
 
 
 def show_path_dijkstra_main_part(dijkstra_data, path, total_weight=0):
-    for y in range(len(dijkstra_data) - 1, 0, -1):
-        if path[-1].father == dijkstra_data[y].position:
-            path.append(dijkstra_data[y])
-            total_weight += path[-1].weight
-    if path[-1].father != 0:
-        show_path_dijkstra_main_part(dijkstra_data, path, total_weight)
-    if len(path) != 0:
-        path.reverse()
-        for z in range(0, len(path)):
-            print(path[z].father + 1, end=" - > ")
-        print("%s Шлях = %s" % (path[-1].position + 1, total_weight))
+    while path[-1].father is not None:
+        for y in range(len(dijkstra_data)):
+            if path[-1].father == dijkstra_data[y].position:
+                path.append(dijkstra_data[y])
+                total_weight += path[-1].weight
+                break
+
+    path.reverse()
+    for z in range(len(path) - 1):
+        print(path[z].position + 1, end=" - > ")
+    print("%s Шлях = %s" % (path[-1].position + 1, total_weight))
 
 
 def dijkstra_algorithm_single(adjacency_matrix, height_start, height_finish):
@@ -204,3 +204,8 @@ elif choice == 2:
         single = dijkstra_algorithm_single(weight_matrix_stroke, heightStart, heightFinish)
         de_stroke_weight_matrix(single, a)
         show_path_dijkstra_single(single)
+    elif choice == 2:
+        startPoint = int(input("Введіть початкову вершину: ")) - 1
+        multiple = dijkstra_algorithm_multiple(weight_matrix_stroke, startPoint)
+        de_stroke_weight_matrix(multiple, a)
+        show_path_dijkstra_multiple(multiple)
