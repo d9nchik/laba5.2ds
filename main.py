@@ -55,7 +55,7 @@ def show_belman_path(belman_data, finish_point):
 
 def show_belman_path_multiple(distance):
     for finish_point in range(len(distance)):
-        print("До %d відстань %d" % (finish_point + 1, distance[finish_point]))
+        print("До %d відстань %s" % (finish_point + 1, distance[finish_point]))
 
 
 def create_adjacency_matrix_with_stroke(adjacency_matrix):
@@ -123,15 +123,15 @@ def dijkstra_algorithm_multiple(adjacency_matrix, height):
 def show_path_dijkstra_multiple(dijkstra_data):
     for x in dijkstra_data:
         path = [x]
-        show_path_dijkstra_main_part(dijkstra_data, path, x.weight)
+        show_path_dijkstra_main_part(dijkstra_data, path)
 
 
-def show_path_dijkstra_main_part(dijkstra_data, path, total_weight=0):
+def show_path_dijkstra_main_part(dijkstra_data, path):
+    total_weight = path[-1].weight
     while path[-1].father is not None:
         for y in range(len(dijkstra_data)):
             if path[-1].father == dijkstra_data[y].position:
                 path.append(dijkstra_data[y])
-                total_weight += path[-1].weight
                 break
 
     path.reverse()
@@ -174,9 +174,9 @@ def show_path_dijkstra_single(dijkstra_data):
     show_path_dijkstra_main_part(dijkstra_data, path)
 
 
-def de_stroke_weight_matrix(matrix, distance):
+def de_stroke_weight_matrix(matrix, distance, start_point):
     for x in range(1, len(matrix)):
-        matrix[x].weight = matrix[x].weight - distance[matrix[x].father] + distance[matrix[x].position]
+        matrix[x].weight = matrix[x].weight - distance[start_point] + distance[matrix[x].position]
     return matrix
 
 
@@ -207,5 +207,5 @@ elif choice == 2:
     elif choice == 2:
         startPoint = int(input("Введіть початкову вершину: ")) - 1
         multiple = dijkstra_algorithm_multiple(weight_matrix_stroke, startPoint)
-        de_stroke_weight_matrix(multiple, a)
+        de_stroke_weight_matrix(multiple, a, startPoint)
         show_path_dijkstra_multiple(multiple)
